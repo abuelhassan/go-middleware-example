@@ -7,7 +7,7 @@ type Middleware interface {
 }
 
 // Process calls all middlewares in the given order.
-func Process(h http.Handler, ms []Middleware) http.Handler {
+func Process(h http.Handler, ms ...Middleware) http.Handler {
 	for i := len(ms) - 1; i >= 0; i-- {
 		h = ms[i].Apply(h)
 	}

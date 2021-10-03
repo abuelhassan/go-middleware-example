@@ -32,8 +32,10 @@ var (
 )
 
 func main() {
+	mux := http.NewServeMux()
 	for _, r := range routes {
-		http.Handle(r.path, middleware.Process(r.handler, append(defaultMiddlewares, r.extraMiddlewares...)))
+		mux.Handle(r.path, middleware.Process(r.handler, r.extraMiddlewares...))
 	}
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	wrappedMux := middleware.Process(mux, defaultMiddlewares...)
+	log.Fatal(http.ListenAndServe(":8080", wrappedMux))
 }
